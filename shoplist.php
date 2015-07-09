@@ -1,13 +1,5 @@
 <?php
-require_once('profile_db.php');
-require_once('others.php');
-define('USER_INTERFACE_LANGUAGE', 'RU');
-define ('DSN','root:abufct@localhost/trackit_prod/utf8/');
-$DB = new DB (DSN);
-if (!$DB->LOADED) 
-{
-    echo  ('<div align="center"><font color="red"><b>Database overloaded. <br>Please return later or use main version of our service.<br>Some functions of service may not work properly</b></font></div>');
-}
+
 $cont ='';
 if (USER_INTERFACE_LANGUAGE == 'RU' or USER_INTERFACE_LANGUAGE =='UA'){	$PLNG ='RU';$PLNG2='RU2';}else {$PLNG2=$PLNG = 'EN';}
 $shoptype[0]='Auction/Trading board';
@@ -247,4 +239,3 @@ function sl_submit()
 	return parse_tags($out,$ITEM);
 }
 echo $out;
-?>
