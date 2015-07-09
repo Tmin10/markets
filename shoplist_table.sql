@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.01 (32 bit)
 MySQL - 5.5.5-10.0.17-MariaDB-1~wheezy-log : Database - trackit_prod
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -41,7 +42,7 @@ CREATE TABLE `shop_names` (
   KEY `type` (`type`),
   KEY `shipping` (`shipping`(255)),
   FULLTEXT KEY `country` (`country`)
-) ENGINE=InnoDB AUTO_INCREMENT=275 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=275 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `shop_names` */
 
@@ -60,7 +61,7 @@ CREATE TABLE `shoplist_tag` (
   KEY `tag` (`tag`),
   CONSTRAINT `shop_id` FOREIGN KEY (`shop_id`) REFERENCES `shop_names` (`id`),
   CONSTRAINT `tag` FOREIGN KEY (`tag`) REFERENCES `shoplist_tag_list` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=203 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=203 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `shoplist_tag` */
 
@@ -77,7 +78,7 @@ CREATE TABLE `shoplist_tag_list` (
   `EN` text COLLATE utf8_unicode_ci NOT NULL,
   KEY `id` (`id`),
   KEY `category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Data for the table `shoplist_tag_list` */
 

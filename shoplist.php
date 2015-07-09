@@ -1,4 +1,13 @@
-<?php 
+<?php
+require_once('profile_db.php');
+require_once('others.php');
+define('USER_INTERFACE_LANGUAGE', 'RU');
+define ('DSN','root:abufct@localhost/trackit_prod/utf8/');
+$DB = new DB (DSN);
+if (!$DB->LOADED) 
+{
+    echo  ('<div align="center"><font color="red"><b>Database overloaded. <br>Please return later or use main version of our service.<br>Some functions of service may not work properly</b></font></div>');
+}
 $cont ='';
 if (USER_INTERFACE_LANGUAGE == 'RU' or USER_INTERFACE_LANGUAGE =='UA'){	$PLNG ='RU';$PLNG2='RU2';}else {$PLNG2=$PLNG = 'EN';}
 $shoptype[0]='Auction/Trading board';
@@ -15,10 +24,10 @@ if(isset($_REQUEST['sl_submit']))
 }
 else
 {
-	if(preg_match('/^\d+$/',$_REQUEST['shop']))
+	if(isset($_REQUEST['shop'])&&preg_match('/^\d+$/',$_REQUEST['shop']))
 	{
 		$LIST = $DB->Query("SELECT * FROM shop_names WHERE id ='".$_REQUEST['shop']."' order by title")->One()->Out();
-		if(count($LIST)<>0)
+		if(count($LIST) !== 0)
 		{
 			$contacts=json_decode($LIST['contacts']);
 			$cont .='<h2>'.$LIST['title'].'</h2>';
@@ -31,35 +40,56 @@ else
 	
 			$cont .='<div class="col-md-8">';
 				$cont .='<div><b>Customer support: </b><br></div>';
-				foreach($contacts->phone as $k1=>$v)
+				if (isset($contacts->phone))
 				{
-					$cont .='<div class="col-md-1"></div>
-							<div >Phone: '.$v->value;
-					if($v->title<>''){$cont .=' ('.$v->title.')';}
-					$cont .='</div>';
+					foreach($contacts->phone as $k1=>$v)
+					{
+						$cont .='<div class="col-md-1"></div>
+								<div >Phone: '.$v->value;
+						if($v->title<>''){$cont .=' ('.$v->title.')';}
+						$cont .='</div>';
+					}
 				}
-				foreach($contacts->fax as $k1=>$v)
+				if (isset($contacts->fax))
 				{
-					$cont .='<div class="col-md-1"></div><div >
-					Fax: '.$v->value;
-					if($v->title<>''){$cont .=' ('.$v->title.')';}
-					$cont .='</div>';
+					foreach($contacts->fax as $k1=>$v)
+					{
+						$cont .='<div class="col-md-1"></div><div >
+						Fax: '.$v->value;
+						if($v->title<>''){$cont .=' ('.$v->title.')';}
+						$cont .='</div>';
+					}
 				}
-				foreach($contacts->email as $k1=>$v)
+				if (isset($contacts->email))
 				{
-					$cont .='<div class="col-md-1"></div><div >Email: '.$v->value;
-					if($v->title<>''){$cont .=' ('.$v->title.')';}
-					$cont .='</div>';
-				}		
-				$cont .='<div><b>Business Hours:</b> </div><div class="col-md-1"></div><div>'.$contacts->worktime.'&nbsp;</div>';	
+					foreach($contacts->email as $k1=>$v)
+					{
+						$cont .='<div class="col-md-1"></div><div >Email: '.$v->value;
+						if($v->title<>''){$cont .=' ('.$v->title.')';}
+						$cont .='</div>';
+					}
+				}
+				$worktime = '';
+				if (isset($contacts->worktime))
+				{
+					$worktime = $contacts->worktime;
+				}
+				$cont .='<div><b>Business Hours:</b> </div><div class="col-md-1"></div><div>'.$worktime.'&nbsp;</div>';	
 				
 				$TAGS = $DB->Query("SELECT * FROM shoplist_tag d  LEFT JOIN shoplist_tag_list f ON d.tag =f.id WHERE d.shop_id ='".$_REQUEST['shop']."'")->Out();
-				foreach($TAGS as $key=>$value)
+				$tags_out = '';
+				if (isset($TAGS))
 				{
-					if($tags<>''){$tags .=', ';}
-					$tags .='<a href="">'.$value[$PLNG].'</a>';
+					foreach($TAGS as $key=>$value)
+					{
+						if($tags_out !== '')
+						{
+							$tags_out .= ', ';
+						}
+						$tags_out .='<a href="">'.$value[$PLNG].'</a>';
+					}
 				}
-				$cont .='<div><b>Tags:</b></div><div class="col-md-1"></div><div>'.$tags.'</div>';
+				$cont .='<div><b>Tags:</b></div><div class="col-md-1"></div><div>'.$tags_out.'</div>';
 			$cont .='</div>';
 			
 			$cont .='<div class="col-md-12">
@@ -79,12 +109,26 @@ else
 				<div class="info">
 					<div style="display: none;" id="info_about" class="text">';
 					$cont .='<div><p>';
-						$text=json_decode($LIST['text']);
-						if($text->text->$PLNG<>''){	$cont .=$text->text->$PLNG;}
-						else{$cont .='[NODATA]';}
-						
+					if (isset($LIST['text']))
+					{
+						$text = json_decode($LIST['text']);
+						if($text->text->$PLNG != '')
+						{
+							$cont .=$text->text->$PLNG;
+						}
+						else
+						{
+							$cont .='[NODATA]';
+						}
+					}
+					else
+					{
+						$cont .='[NODATA]';
+					}
 					$cont .='</p></div>';
 					$cont .='<div><b>Addresses: </b></div>';
+					if (isset($contacts->address))
+					{
 						foreach($contacts->address as $k1=>$v)
 						{
 							$cont .='<div >';
@@ -96,6 +140,7 @@ else
 	
 			
 						}	
+					}
 					$cont.='</div>
 					<div style="display: none;" id="info_feedback" class="text" align="left">
 						<h3>Наш сервис поможет Вам</h3><ul><li>отследить ваши регистрированные почтовые отправленяе по их номерам (идентификатору, трекинг номеру, РПО) более 400 почтово транспортных компаний всего мира;</li><li>узнать где посылка находится в данный момент;</li><li>автоматически определить компанию, которая доставляет вашу посылку по её номеру, транспортной накладной или авианакладной;</li><li>получить данные на удобном Вам языке (Английский, Русский, Немецкий, Польский, Итальянский, Западно Украинский);</li><li>хранить и автоматически отслеживать все Ваши отправления в персональном кабинете;</li><li>извещать Вашего клиента или друга о движении вашей посылки используя e-mail;</li></ul>
@@ -115,14 +160,14 @@ else
 	
 		}
 	}
-	elseif(preg_match('/^[A-Z]{2}$/',$_REQUEST['from']))
+	elseif(isset($_REQUEST['from'])&&preg_match('/^[A-Z]{2}$/',$_REQUEST['from']))
 	{
 		$cont .='<h2>International shop list - '.$COUNTRY[$_REQUEST['from']][$PLNG2].'</h2>';
 		$LIST = $DB->Query("SELECT * FROM shop_names WHERE country ='".$_REQUEST['from']."' order by title")->Out();
 		foreach($LIST as $key=>$value)
 		{
 	//		$cont .='<br>'.json_encode($value);
-			$cont .='<div class="btn btn-default col-md-6"><div class="btn btn-default col-md-4">'.set_shop_image($value['link']).' <br><b>rating stars</b></div><div class="col-md-8"><b><a href="/?service=sl&shop='.$value['id'].'" >'.$value['title'].'</a><br></b> ('.$shoptype[$value['type']].')<br>10 reviews/  10 Offers</div></div>';
+			$cont .='<div class="btn btn-default col-md-6"><div class="btn btn-default col-md-4">'.set_shop_image($value['link']).' <br><b>rating stars</b></div><div class="col-md-8"><b><a href="?service=sl&shop='.$value['id'].'" >'.$value['title'].'</a><br></b> ('.$shoptype[$value['type']].')<br>10 reviews/  10 Offers</div></div>';
 		}
 	}
 	else
@@ -137,7 +182,7 @@ else
 	}
 	
 	$cont .='';
-	$out = parse_tags ($cont, $POSTAL[$CODE]);
+	$out = $cont;
 }
 
 function sl_submit()
@@ -157,7 +202,7 @@ function sl_submit()
 	$COUNTRY_LIST[]=array('SOR','Seller Defined');
 	$COUNTRY_LIST[]=array('GSX','GlobalShipex');
 	$COUNTRY_LIST[]=array('SPT','Shipito');
-echo json_encode($_REQUEST);
+	//echo json_encode($_REQUEST);
 	if (isset($_REQUEST['add']))
 	{
 		if($_REQUEST['SL_LINK']<>'')
@@ -201,4 +246,5 @@ echo json_encode($_REQUEST);
 	}
 	return parse_tags($out,$ITEM);
 }
+echo $out;
 ?>
