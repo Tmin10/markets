@@ -169,7 +169,7 @@ else
 		foreach($LIST as $key=>$value)
 		{
 	//		$cont .='<br>'.json_encode($value);
-			$cont .='<div class="btn btn-default col-md-6"><a href="?service=sl&from='.$value['country'].'" ><img src="/pics/flag/'.strtolower($value['country']).'.png">&nbsp;<b>'.$COUNTRY[$value['country']][$PLNG].' ('.$value['q'].')</b></div>';
+			$cont .='<div class="btn btn-default col-md-6"><a href="?service=sl&from='.$value['country'].'" ><img src="http://trackitonline.ru//pics/flag/'.strtolower($value['country']).'.png">&nbsp;<b>'.$COUNTRY[$value['country']][$PLNG].' ('.$value['q'].')</b></div>';
 		}
 	}
 	
