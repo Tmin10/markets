@@ -1,37 +1,56 @@
 <?php
 
-$cont ='';
-if (USER_INTERFACE_LANGUAGE == 'RU' or USER_INTERFACE_LANGUAGE =='UA'){	$PLNG ='RU';$PLNG2='RU2';}else {$PLNG2=$PLNG = 'EN';}
-$shoptype[0]='Auction/Trading board';
-$shoptype[1]='Retailer';
-$shoptype[2]='Manufacturer Shop';
-$shoptype[3]='Brand Retailer';
-$shoptype[6]='Shopping Mall';
-$shoptype[7]='Official Dealer';
-$shoptype[8]='Outlet';
-$shoptype[9]='Dropshipper';
+if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'ajax')
+{
+  $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
+  
+  
+  
+  die();
+}
+
+
+$cont = '';
+if (USER_INTERFACE_LANGUAGE == 'RU' || USER_INTERFACE_LANGUAGE == 'UA')
+{	
+  $PLNG = 'RU';
+  $PLNG2 = 'RU2';
+}
+else 
+{
+  $PLNG2 = $PLNG = 'EN';
+}
+$shoptype[0] = 'Auction/Trading board';
+$shoptype[1] = 'Retailer';
+$shoptype[2] = 'Manufacturer Shop';
+$shoptype[3] = 'Brand Retailer';
+$shoptype[6] = 'Shopping Mall';
+$shoptype[7] = 'Official Dealer';
+$shoptype[8] = 'Outlet';
+$shoptype[9] = 'Dropshipper';
 if(isset($_REQUEST['sl_submit']))
 {
 	$out = sl_submit();
 }
 else
 {
-	if(isset($_REQUEST['shop'])&&preg_match('/^\d+$/',$_REQUEST['shop']))
+	if(filter_has_var(INPUT_GET, 'shop')&&preg_match('/^\d+$/',$_REQUEST['shop']))
 	{
+    $shop = (int) filter_input(INPUT_GET, 'shop', FILTER_SANITIZE_NUMBER_INT);
 		$LIST = $DB->Query("SELECT * FROM shop_names WHERE id ='".$_REQUEST['shop']."' order by title")->One()->Out();
 		if(count($LIST) !== 0)
 		{
-			$contacts=json_decode($LIST['contacts']);
-			$cont .='<h2>'.$LIST['title'].'</h2>';
-			$cont .='<div class="col-md-4">
+			$contacts = json_decode($LIST['contacts']);
+			$cont .= '<h2>'.$LIST['title'].'</h2>';
+			$cont .= '<div class="col-md-4">
 						<center>
 						<div class="btn btn-default">'.set_shop_image($LIST['link']).'</div><br>
-						<div ><a href="/away.php?to='.$LIST['link'].'"><b>'.$LIST['link'].'</b></a></div>
+						<div ><a href="http://trackitonline.ru/away.php?to='.$LIST['link'].'"><b>'.$LIST['link'].'</b></a></div>
 					<div ><b>'.$shoptype[$LIST['type']].' /'.$COUNTRY[$LIST['country']][$PLNG].'</b></div>
 					</center></div>';
 	
-			$cont .='<div class="col-md-8">';
-				$cont .='<div><b>Customer support: </b><br></div>';
+			$cont .= '<div class="col-md-8">';
+				$cont .= '<div><b>Customer support: </b><br></div>';
 				if (isset($contacts->phone))
 				{
 					foreach($contacts->phone as $k1=>$v)
@@ -86,65 +105,99 @@ else
 			
 			$cont .='<div class="col-md-12">
 					<div class="infospan">
-				<div class="btn-group btn-group-justified mobile-hide">
-					<a href="#info_about" class="btn btn-default switch">О магазине</a>
-					<a href="#info_feedback" class="btn btn-default switch">Отзывы</a>
-					<a href="#info_news" class="btn btn-default switch">Новости</a>
-					<a href="#info_offers" class="btn btn-default switch">Купоны</a>
-				</div>
-				<div class="btn-group btn-group-vertical mobile-view">
-					<a href="#info_about" class="btn btn-default switch">О магазине</a>
-					<a href="#info_feedback" class="btn btn-default switch">Отзывы</a>
-					<a href="#info_news" class="btn btn-default switch">Новости</a>
-					<a href="#info_offers" class="btn btn-default switch">Купоны</a>
-				</div>
-				<div class="info">
-					<div style="display: none;" id="info_about" class="text">';
-					$cont .='<div><p>';
-					if (isset($LIST['text']))
-					{
-						$text = json_decode($LIST['text']);
-						if($text->text->$PLNG != '')
-						{
-							$cont .=$text->text->$PLNG;
-						}
-						else
-						{
-							$cont .='[NODATA]';
-						}
-					}
-					else
-					{
-						$cont .='[NODATA]';
-					}
-					$cont .='</p></div>';
-					$cont .='<div><b>Addresses: </b></div>';
-					if (isset($contacts->address))
-					{
-						foreach($contacts->address as $k1=>$v)
-						{
-							$cont .='<div >';
-							if($v->title<>''){$cont .=' <b>'.$v->title.':</b></div>';}
-							else{$cont .='</div>';}
-							$cont .='<div class="col-md-1"></div><div>'.$v->value;
-							if($v->worktime<>''){$cont .='<br><div class="col-md-1"></div><i>Business hours:</b>'.$v->worktime.'</i>';}
-							$cont .='</div>';
-	
-			
-						}	
-					}
-					$cont.='</div>
-					<div style="display: none;" id="info_feedback" class="text" align="left">
-						<h3>Наш сервис поможет Вам</h3><ul><li>отследить ваши регистрированные почтовые отправленяе по их номерам (идентификатору, трекинг номеру, РПО) более 400 почтово транспортных компаний всего мира;</li><li>узнать где посылка находится в данный момент;</li><li>автоматически определить компанию, которая доставляет вашу посылку по её номеру, транспортной накладной или авианакладной;</li><li>получить данные на удобном Вам языке (Английский, Русский, Немецкий, Польский, Итальянский, Западно Украинский);</li><li>хранить и автоматически отслеживать все Ваши отправления в персональном кабинете;</li><li>извещать Вашего клиента или друга о движении вашей посылки используя e-mail;</li></ul>
-					</div>
-					<div style="display: block;" id="info_news" class="text" align="left">
-						<p></p><h3>Как отследить посылку?</h3><p></p> <p>Для того чтобы отследить посылку Вам нужен только <b>номер отправления</b>, все остальное для Вас сделает наш сервис!</p><p></p><ul><li>1. Введите номер Вашего отправления в поле <b>Номер отправления</b>.</li><li>2. Выберите страну назначения в поле <b>Куда?</b></li> <li>3. Если Ваше отправление имеет формат отличный от формата Всемирного почтового союза (AB123456789CD), то для точности определения почтового перевозчика, выберите службу, которой было отправлено Ваше отправление в поле <b>Какой службой?</b></li><li>4. Введите код безопасности и нажмите кнопку поиска.</li><li>5. Получите результат проверки Вашего почтового отправления.</li><li>В случае, если Наш сервис не сможет в автоматическом режиме распознать службу, которой было отправлено Ваше отправление, отправьте сообщение через онлайн чат с указанием номера почтового отправления и службы, которой было отправлено Ваше отправление, и Мы постараемся добавить отслеживание таких номеров на нашем сервисе в кратчайшие сроки.</li><li><!--noindex--><a href="http://tonnasovetov.ru/hitech/tracking-mail/" target="_blank" rel="nofollow">Краткая инструкция по пользованию от наших друзей</a><!--/noindex-->.</li></ul><p></p>
-					</div>
-					<div style="display: block;" id="info_offers" class="text" align="left">
-						<p></p><h3>Как отследить посылку?</h3><p></p> <p>Для того чтобы отследить посылку Вам нужен только <b>номер отправления</b>, все остальное для Вас сделает наш сервис!</p><p></p><ul><li>1. Введите номер Вашего отправления в поле <b>Номер отправления</b>.</li><li>2. Выберите страну назначения в поле <b>Куда?</b></li> <li>3. Если Ваше отправление имеет формат отличный от формата Всемирного почтового союза (AB123456789CD), то для точности определения почтового перевозчика, выберите службу, которой было отправлено Ваше отправление в поле <b>Какой службой?</b></li><li>4. Введите код безопасности и нажмите кнопку поиска.</li><li>5. Получите результат проверки Вашего почтового отправления.</li><li>В случае, если Наш сервис не сможет в автоматическом режиме распознать службу, которой было отправлено Ваше отправление, отправьте сообщение через онлайн чат с указанием номера почтового отправления и службы, которой было отправлено Ваше отправление, и Мы постараемся добавить отслеживание таких номеров на нашем сервисе в кратчайшие сроки.</li><li><!--noindex--><a href="http://tonnasovetov.ru/hitech/tracking-mail/" target="_blank" rel="nofollow">Краткая инструкция по пользованию от наших друзей</a><!--/noindex-->.</li></ul><p></p>
-					</div>
-	
-				</div>
+          
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"><a href="#about" aria-controls="home" role="tab" data-toggle="tab">О магазине</a></li>
+    <li role="presentation" class="active"><a href="#reviews" aria-controls="profile" role="tab" data-toggle="tab">Отзывы</a></li>
+    <li role="presentation"><a href="#news" aria-controls="messages" role="tab" data-toggle="tab">Новости</a></li>
+    <li role="presentation"><a href="#coupons" aria-controls="settings" role="tab" data-toggle="tab">Купоны</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane" id="about">...1</div>
+    <div role="tabpanel" class="tab-pane active" id="reviews">';
+    
+    if (!($DB->Count('reviews', "parent_id = '$shop' AND is_comment = 0 AND user_id = '$user_id'")>0))
+    {
+      $cont .= '<form class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="rating1">Скорость обработки заказа</label>
+                    <div class="col-sm-8">
+                      <input id="rating1" value="0" class="rating-stars" data-step=1 data-size="xs">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="rating2">Отзывчивость продавца</label>
+                    <div class="col-sm-8">
+                      <input id="rating2" value="0" class="rating-stars" data-step=1 data-size="xs">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="rating3">Качество товара</label>
+                    <div class="col-sm-8">
+                      <input id="rating3" value="0" class="rating-stars" data-step=1 data-size="xs" >
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label" for="rating4">Общая оценка</label>
+                    <div class="col-sm-8">
+                      <input id="rating4" value="0" class="rating-stars" data-step=1 data-size="xs">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="language">Язык отзыва</label>
+                    <select id="language" class="form-control">
+                      <option value="1">Русский</option>
+                      <option value="2">English</option>
+                      
+                    </select>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Текст отзыва</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-default">Оставить отзыв</button>
+                    <button type="submit" class="btn btn-warning">Добавит отзыв на другом языке</button>
+                  </div>
+                </form>';
+    }
+    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed, rating_responsibility, rating_quality, rating_summary '
+                        . 'FROM reviews '
+                        . 'JOIN reviews_text ON reviews_text.review_id = reviews.id '
+                        . "WHERE parent_id = '$shop' AND is_comment = 0 AND reviews_text.language_id = 1")->Out();
+    if (count($reviews) === 0)
+    {
+      $cont .= "У данного магазина пока нет отзывов, оставьте первый.";
+    }
+    else
+    {
+      foreach ($reviews as $review) 
+      {
+        $cont .= 'Юзер: '.$review['user_id'].'<br />';
+        $cont .= '&#8679; '.$review['rating_up'].'&#8681; '.$review['rating_down'].'<br />';
+        $cont .= 'Скорость обработки заказа: '.$review['rating_speed'].'<br />';
+        $cont .= 'Отзывчивость продавца: '.$review['rating_responsibility'].'<br />';
+        $cont .= 'Качество товара: '.$review['rating_quality'].'<br />';
+        $cont .= 'Общая оценка: '.$review['rating_summary'].'<br />';
+        $cont .= '-----------<br />';
+        $cont .= $review['text'].'<br />';
+        
+        
+      }
+    }
+    $cont .= '</div>
+    <div role="tabpanel" class="tab-pane" id="news">...3</div>
+    <div role="tabpanel" class="tab-pane" id="coupons">...4</div>
+  </div>
+
+</div>
+				
 			</div>
 				</div>	
 					
@@ -152,7 +205,7 @@ else
 	
 		}
 	}
-	elseif(isset($_REQUEST['from'])&&preg_match('/^[A-Z]{2}$/',$_REQUEST['from']))
+	elseif(filter_has_var(INPUT_GET ,'from')&&preg_match('/^[A-Z]{2}$/',$_REQUEST['from']))
 	{
 		$cont .='<h2>International shop list - '.$COUNTRY[$_REQUEST['from']][$PLNG2].'</h2>';
 		$LIST = $DB->Query("SELECT * FROM shop_names WHERE country ='".$_REQUEST['from']."' order by title")->Out();

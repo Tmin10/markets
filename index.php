@@ -37,7 +37,7 @@ echo <<<HEAD
         <meta NAME="webmoney.attestation.label" content="webmoney attestation label#310D42A8-53C0-4744-81D2-0AFC304B68CB">
         <title>Отслеживание почтовых отправлений. Trackitonline.</title>
 
-        <link href="http://trackitonline.ru/embed/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
         <link href="http://trackitonline.ru/embed/css/track.css?20150607-1" rel="stylesheet">
 
         <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/> 
@@ -45,7 +45,6 @@ echo <<<HEAD
         <link rel="canonical" href="http://trackitonline.ru/" />
 
         <link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
         <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
