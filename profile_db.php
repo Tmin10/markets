@@ -36,7 +36,7 @@ class DB {
         $this->FF = FALSE;
         $this->CUR = FALSE;
         if (is_string ($DSN)) {
-            if (mb_eregi ('^([^:]+):([^@]+)@([^/]+)/([^\\/:*?."<>|]+)/([^\\/:*?."<>|]*)/([^\\/:*?."<>|]*)', $DSN, $DSNARRAY)) {
+            if (mb_eregi ('^([^:]+):([^@]*)@([^/]+)/([^\\/:*?."<>|]+)/([^\\/:*?."<>|]*)/([^\\/:*?."<>|]*)', $DSN, $DSNARRAY)) {
                 list ($this->DSN['dsn'], $this->DSN['user'], $this->DSN['pass'], $this->DSN['host'], $this->DSN['dbname'], $this->DSN['charset'], $this->DSN['pref']) = $DSNARRAY;
                 return $this->_driver_connect ();
             } else {
