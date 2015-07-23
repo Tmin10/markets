@@ -36,7 +36,7 @@ else
 {
 	if(filter_has_var(INPUT_GET, 'shop')&&preg_match('/^\d+$/',$_REQUEST['shop']))
 	{
-    $shop = (int) filter_input(INPUT_GET, 'shop', FILTER_SANITIZE_NUMBER_INT);
+            $shop = (int) filter_input(INPUT_GET, 'shop', FILTER_SANITIZE_NUMBER_INT);
 		$LIST = $DB->Query("SELECT * FROM shop_names WHERE id ='".$_REQUEST['shop']."' order by title")->One()->Out();
 		if(count($LIST) !== 0)
 		{
@@ -167,7 +167,12 @@ else
                   </div>
                 </form>';
     }
-    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed, rating_responsibility, rating_quality, rating_summary '
+    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
+                          . ' rating_responsibility, rating_quality, rating_summary, ('
+                                                                                    . 'SELECT COUNT(*) '
+                                                                                    . 'FROM reviews_text '
+                                                                                    . 'WHERE reviews_text.review_id = reviews.id'
+                                                                                    . ') as languages '
                         . 'FROM reviews '
                         . 'JOIN reviews_text ON reviews_text.review_id = reviews.id '
                         . "WHERE parent_id = '$shop' AND is_comment = 0 AND reviews_text.language_id = 1")->Out();
@@ -185,9 +190,12 @@ else
         $cont .= 'Отзывчивость продавца: '.$review['rating_responsibility'].'<br />';
         $cont .= 'Качество товара: '.$review['rating_quality'].'<br />';
         $cont .= 'Общая оценка: '.$review['rating_summary'].'<br />';
+        if ($review['languages'] > 1)
+        {
+             $cont .= 'Отзыв доступен на других языках.<br />';
+        }
         $cont .= '-----------<br />';
         $cont .= $review['text'].'<br />';
-        
         
       }
     }
@@ -207,13 +215,20 @@ else
 	}
 	elseif(filter_has_var(INPUT_GET ,'from')&&preg_match('/^[A-Z]{2}$/',$_REQUEST['from']))
 	{
-		$cont .='<h2>International shop list - '.$COUNTRY[$_REQUEST['from']][$PLNG2].'</h2>';
-		$LIST = $DB->Query("SELECT * FROM shop_names WHERE country ='".$_REQUEST['from']."' order by title")->Out();
-		foreach($LIST as $key=>$value)
-		{
-	//		$cont .='<br>'.json_encode($value);
-			$cont .='<div class="btn btn-default col-md-6"><div class="btn btn-default col-md-4">'.set_shop_image($value['link']).' <br><b>rating stars</b></div><div class="col-md-8"><b><a href="?service=sl&shop='.$value['id'].'" >'.$value['title'].'</a><br></b> ('.$shoptype[$value['type']].')<br>10 reviews/  10 Offers</div></div>';
-		}
+            $from = filter_input(INPUT_GET, 'from');
+            $cont .='<h2>International shop list - '.$COUNTRY[$from][$PLNG2].'</h2>';
+            $LIST = $DB->Query("SELECT id, title, `type` , link, (
+                                                                    SELECT COUNT( * )
+                                                                    FROM reviews
+                                                                    WHERE reviews.parent_id = shop_names.id
+                                                                 ) AS reviews
+                                FROM shop_names
+                                WHERE country = '$from'")->Out();
+            foreach($LIST as $key => $value)
+            {
+            //		$cont .='<br>'.json_encode($value);
+            $cont .='<div class="btn btn-default col-md-6"><div class="btn btn-default col-md-4">'.set_shop_image($value['link']).' <br><b>rating stars</b></div><div class="col-md-8"><b><a href="?service=sl&shop='.$value['id'].'" >'.$value['title'].'</a><br></b> ('.$shoptype[$value['type']].')<br>'.$value['reviews'].' reviews</div></div>';
+            }
 	}
 	else
 	{

@@ -3,7 +3,7 @@ require_once('profile_db.php');
 header('Content-Type: text/html; charset=utf-8');
 
 define('USER_INTERFACE_LANGUAGE', 'RU');
-define ('DSN','root:abufct@localhost/trackit_prod/utf8/');
+define ('DSN','root:@localhost/trackit_prod/utf8/');
 $DB = new DB (DSN);
 if (!$DB->LOADED) 
 {
