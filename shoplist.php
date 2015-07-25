@@ -4,7 +4,10 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
 {
   $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
   
-  
+  if ($type === 'post_review')
+  {
+    
+  }
   
   die();
 }
@@ -123,7 +126,7 @@ else
     
     if (!($DB->Count('reviews', "parent_id = '$shop' AND is_comment = 0 AND user_id = '$user_id'")>0))
     {
-      $cont .= '<form class="form-horizontal">
+      $cont .= '<form class="form-horizontal" id="post-review">
                   <div class="form-group">
                     <label class="col-sm-4 control-label" for="rating1">Скорость обработки заказа</label>
                     <div class="col-sm-8">
@@ -148,22 +151,20 @@ else
                       <input id="rating4" value="0" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" class="language-select">
                     <label for="language">Язык отзыва</label>
                     <select id="language" class="form-control">
                       <option value="1">Русский</option>
                       <option value="2">English</option>
-                      
                     </select>
                   </div>
-                  
-                  <div class="form-group">
+                  <div class="form-group" class="review-text">
                     <label for="exampleInputEmail1">Текст отзыва</label>
                     <textarea class="form-control" rows="3"></textarea>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn btn-default">Оставить отзыв</button>
-                    <button type="submit" class="btn btn-warning">Добавит отзыв на другом языке</button>
+                    <button type="submit" id="add-language" class="btn btn-warning">Добавит отзыв на другом языке</button>
                   </div>
                 </form>';
     }
