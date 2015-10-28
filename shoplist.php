@@ -1,18 +1,5 @@
 <?php
 
-if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'ajax')
-{
-  $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
-  
-  if ($type === 'post_review')
-  {
-    
-  }
-  
-  die();
-}
-
-
 $cont = '';
 if (USER_INTERFACE_LANGUAGE == 'RU' || USER_INTERFACE_LANGUAGE == 'UA')
 {	
@@ -127,46 +114,48 @@ else
     if (!($DB->Count('reviews', "parent_id = '$shop' AND is_comment = 0 AND user_id = '$user_id'")>0))
     {
       $cont .= '<form class="form-horizontal" id="post-review">
-                  <div class="form-group">
+                  <div class="form-group star">
                     <label class="col-sm-4 control-label" for="rating1">Скорость обработки заказа</label>
                     <div class="col-sm-8">
-                      <input id="rating1" value="0" class="rating-stars" data-step=1 data-size="xs">
+                      <input id="rating1" name="speed" value="0" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group star">
                     <label class="col-sm-4 control-label" for="rating2">Отзывчивость продавца</label>
                     <div class="col-sm-8">
-                      <input id="rating2" value="0" class="rating-stars" data-step=1 data-size="xs">
+                      <input id="rating2" name="responsibility" value="0" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group star">
                     <label class="col-sm-4 control-label" for="rating3">Качество товара</label>
                     <div class="col-sm-8">
-                      <input id="rating3" value="0" class="rating-stars" data-step=1 data-size="xs" >
+                      <input id="rating3" value="0" name="quality" class="rating-stars" data-step=1 data-size="xs" >
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group star">
                     <label class="col-sm-4 control-label" for="rating4">Общая оценка</label>
                     <div class="col-sm-8">
-                      <input id="rating4" value="0" class="rating-stars" data-step=1 data-size="xs">
+                      <input id="rating4" value="0" name="summary" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
                   <div class="form-group" class="language-select">
-                    <label for="language">Язык отзыва</label>
-                    <select id="language" class="form-control">
+                    <label>Язык отзыва</label>
+                    <select class="form-control" name="language[]">
                       <option value="1">Русский</option>
                       <option value="2">English</option>
                     </select>
                   </div>
-                  <div class="form-group" class="review-text">
-                    <label for="exampleInputEmail1">Текст отзыва</label>
-                    <textarea class="form-control" rows="3"></textarea>
+                  <div class="form-group review-text">
+                    <label>Текст отзыва</label>
+                    <textarea class="form-control" name="review[]" rows="3"></textarea>
                   </div>
                   <div class="form-group">
                     <button type="submit" class="btn btn-default">Оставить отзыв</button>
                     <button type="submit" id="add-language" class="btn btn-warning">Добавит отзыв на другом языке</button>
                   </div>
-                </form>';
+                  <input type="hidden" name="type" value="post_review"/>
+                </form>
+                <div class="review-box">';
     }
     $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
                           . ' rating_responsibility, rating_quality, rating_summary, ('
@@ -201,6 +190,7 @@ else
       }
     }
     $cont .= '</div>
+      </div>
     <div role="tabpanel" class="tab-pane" id="news">...3</div>
     <div role="tabpanel" class="tab-pane" id="coupons">...4</div>
   </div>

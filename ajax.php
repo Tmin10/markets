@@ -21,321 +21,47 @@ $POSTAL = json_decode('{"AC_PO":{"CODE":"AC_PO","SHORTNAME":"Post Office","ORGNA
 //ID текущего пользователя
 $user_id = 1;
 
-
-echo <<<HEAD
-
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
-        <meta name="Description" content="Автоматизированный сервис отслеживания почтовых отправлений, грузов, ЕМС, посылок, писем всего мира в одном окне."/>
-        <meta name="Keywords" content="Отслеживание почтовых отправлений, трекинг, трекер, где посылка, международные отправления, найти посылку, груз, накладная, контейнер, номер посылки"/>
-        <meta name="author" content="">
-        <meta name="yandex-verification" content="7822a67ab4b8c068" />
-        <meta NAME="webmoney.attestation.label" content="webmoney attestation label#310D42A8-53C0-4744-81D2-0AFC304B68CB">
-        <title>Отслеживание почтовых отправлений. Trackitonline.</title>
-
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-        <link href="http://trackitonline.ru/embed/css/track.css?20150607-1" rel="stylesheet">
-
-        <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon"/> 
-        <link rel="icon" href="favicon.ico" type="image/vnd.microsoft.icon"/> 
-        <link rel="canonical" href="http://trackitonline.ru/" />
-
-        <link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-        <link href="css/markets.css" media="all" rel="stylesheet" type="text/css" />
-
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-
-        <![endif]-->
-        <!--[if gte IE 9]>
-        <style type="text/css">
-          .gradient {
-             filter: none;
-          }
-        </style>
-        <![endif]-->
-
-        
-
-
-    </head>
-    <body>
-        <div class="container">
-            <nav class="navbar navbar-default hidden-sm hidden-md hidden-lg">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand navbar-brand-logo" href="/">
-                            <img class="img-logo" src="http://trackitonline.ru/embed/img/logo.png" title="Отслеживание почтовых отправлений" alt="Отслеживание почтовых отправлений" />
-                        </a>
-                        <button type="button" class="navbar-toggle collapsed btn btn-default" data-toggle="collapse" data-target="#mainsidemenu">
-                            <span class="sr-only">Показать меню</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <div class="nav navbar-nav visible-720 topnavforg"><div class="g-plusone"></div></div>
-                    </div>
-                    <div class="collapse navbar-collapse" id="mainsidemenu">
-                        <ul class="nav">
-                            <li><a href="/">Отслеживание отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=trackorder&amp;CCode=RU">Отслеживание заказов</a></li>
-<li><a href="http://trackitonline.ru/?service=shop_search&amp;CCode=RU">Универсальный поиск товаров на Алиэкспресс, Амазон и Ибэй</a></li>
-<!--<li><a href="http://trackitonline.ru/?service=sms&amp;CCode=RU">СМС оповещение</a></li>-->
-<li><a href="http://trackitonline.ru/?service=postal&amp;CCode=RU">Почтовые службы мира</a></li>
-<li><a href="http://trackitonline.ru/?service=cn23&amp;CCode=RU">Таможенная декларация</a></li>
-<li><a href="http://trackitonline.ru/?service=stlist&amp;CCode=RU">Статусы почтовых отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=app&amp;CCode=RU">Приложения</a></li>
-<li><a href="http://trackitonline.ru/?service=feedback&amp;CCode=RU">Отзывы и предложения</a></li>						
-                        </ul>
-                        <div class="nav flags-big">
-                            <div>Выберите ваш язык</div>
-<a href="http://trackitonline.ru/?CCode=RU"><img class="flag" src="http://trackitonline.ru/pics/flag/ru.png" title="Русский" alt="Русский"></a>
-<a href="http://trackitonline.ru/?CCode=US"><img class="flag" src="http://trackitonline.ru/pics/flag/gb.png" title="Английский" alt="Английский"></a>
-<a href="http://trackitonline.ru/?CCode=DE"><img class="flag" src="http://trackitonline.ru/pics/flag/de.png" title="Немецкий" alt="Немецкий"></a>
-<a href="http://trackitonline.ru/?CCode=ES"><img class="flag" src="http://trackitonline.ru/pics/flag/es.png" title="Испанский" alt="Испанский"></a>
-<a href="http://trackitonline.ru/?CCode=FR"><img class="flag" src="http://trackitonline.ru/pics/flag/fr.png" title="Французский" alt="Французский"></a>
-<a href="http://trackitonline.ru/?CCode=IT"><img class="flag" src="http://trackitonline.ru/pics/flag/it.png" title="Итальянский" alt="Итальянский"></a>
-<a href="http://trackitonline.ru/?CCode=PL"><img class="flag" src="http://trackitonline.ru/pics/flag/pl.png" title="Польский" alt="Польский"></a>
-<a href="http://trackitonline.ru/?CCode=PT"><img class="flag" src="http://trackitonline.ru/pics/flag/pt.png" title="Португальский" alt="Португальский"></a>
-<a href="http://trackitonline.ru/?CCode=UA"><img class="flag" src="http://trackitonline.ru/pics/flag/ua.png" title="Украинский" alt="Украинский"></a>
-                        </div>
-                        <div class="nav social-big">
-                            <a href="http://vk.com/trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_vk.png" title="Vk.com"></a>
-                            <a href="https://www.facebook.com/Trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_fb.png" title="facebook.com"></a>
-                            <a href="https://twitter.com/track_it_online" target="_blank"><img src="http://trackitonline.ru/pics/icon_tw.png" title="twitter"></a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="row maincontent">
-                <div class="col-md-4 col-lg-3 leftside">
-                    <div class="hidden-xs hidden-sm">
-                        <div class="zoomglass"></div>
-                        <div class="logo-big">
-                            <a href="/">
-                                <img class="img-logo" src="http://trackitonline.ru/embed/img/logo.png" title="Отслеживание почтовых отправлений" alt="Отслеживание почтовых отправлений" />
-                            </a>
-                        </div>
-                        <div class="sidebar-module">
-                            <ul class="nav menu-side">
-                                <li><a href="/">Отслеживание отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=trackorder&amp;CCode=RU">Отслеживание заказов</a></li>
-<li><a href="http://trackitonline.ru/?service=shop_search&amp;CCode=RU">Универсальный поиск товаров на Алиэкспресс, Амазон и Ибэй</a></li>
-<!--<li><a href="http://trackitonline.ru/?service=sms&amp;CCode=RU">СМС оповещение</a></li>-->
-<li><a href="http://trackitonline.ru/?service=postal&amp;CCode=RU">Почтовые службы мира</a></li>
-<li><a href="http://trackitonline.ru/?service=cn23&amp;CCode=RU">Таможенная декларация</a></li>
-<li><a href="http://trackitonline.ru/?service=stlist&amp;CCode=RU">Статусы почтовых отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=app&amp;CCode=RU">Приложения</a></li>
-<li><a href="http://trackitonline.ru/?service=feedback&amp;CCode=RU">Отзывы и предложения</a></li>							
-                            </ul>
-                            <div class="nav social" align="center">
-                                <a href="http://vk.com/trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_vk.png" title="Vk.com"></a>
-                                <a href="https://www.facebook.com/Trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_fb.png" title="facebook.com"></a>
-                                <a href="https://twitter.com/track_it_online" target="_blank"><img src="http://trackitonline.ru/pics/icon_tw.png" title="twitter"></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="visible-sm">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="logo-mid">
-                                    <a href="/">
-                                        <img class="img-logo" src="http://trackitonline.ru/embed/img/logo.png" title="Отслеживание почтовых отправлений" alt="Отслеживание почтовых отправлений" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-sm-8">
-                                <div class="row">
-                                    <div class="col-sm-5">
-                                        <div class="nav flags flags-med" align="center">
-                                            <div>Выберите ваш язык</div>
-<a href="http://trackitonline.ru/?CCode=RU"><img class="flag" src="http://trackitonline.ru/pics/flag/ru.png" title="Русский" alt="Русский"></a>
-<a href="http://trackitonline.ru/?CCode=US"><img class="flag" src="http://trackitonline.ru/pics/flag/gb.png" title="Английский" alt="Английский"></a>
-<a href="http://trackitonline.ru/?CCode=DE"><img class="flag" src="http://trackitonline.ru/pics/flag/de.png" title="Немецкий" alt="Немецкий"></a>
-<a href="http://trackitonline.ru/?CCode=ES"><img class="flag" src="http://trackitonline.ru/pics/flag/es.png" title="Испанский" alt="Испанский"></a>
-<a href="http://trackitonline.ru/?CCode=FR"><img class="flag" src="http://trackitonline.ru/pics/flag/fr.png" title="Французский" alt="Французский"></a>
-<a href="http://trackitonline.ru/?CCode=IT"><img class="flag" src="http://trackitonline.ru/pics/flag/it.png" title="Итальянский" alt="Итальянский"></a>
-<a href="http://trackitonline.ru/?CCode=PL"><img class="flag" src="http://trackitonline.ru/pics/flag/pl.png" title="Польский" alt="Польский"></a>
-<a href="http://trackitonline.ru/?CCode=PT"><img class="flag" src="http://trackitonline.ru/pics/flag/pt.png" title="Португальский" alt="Португальский"></a>
-<a href="http://trackitonline.ru/?CCode=UA"><img class="flag" src="http://trackitonline.ru/pics/flag/ua.png" title="Украинский" alt="Украинский"></a>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-5" align="center">
-                                        <div class="flags">
-                                            <br/>
-                                            <div class="row">
-                                                <div class="col-xs-8"><div class="addthis_sharing_toolbox" align="center"></div>
-</div>
-                                                <div class="col-xs-4"><div class="g-plusone"></div></div>
-                                            </div>
-                                            <div class="nav social" align="center">
-                                                <a href="http://vk.com/trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_vk.png" title="Vk.com"></a>
-                                                <a href="https://www.facebook.com/Trackitonline" target="_blank"><img src="http://trackitonline.ru/pics/icon_fb.png" title="facebook.com"></a>
-                                                <a href="https://twitter.com/track_it_online" target="_blank"><img src="http://trackitonline.ru/pics/icon_tw.png" title="twitter"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <div class="collapse navbar-collapse" id="mainsidemenu">
-                                            <div class="dropdown pull-right">
-                                                <button class="btn btn-default btn-lg" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="glyphicon glyphicon-menu-hamburger"></span>
-                                                </button>
-                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                                    <li><a href="/">Отслеживание отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=trackorder&amp;CCode=RU">Отслеживание заказов</a></li>
-<li><a href="http://trackitonline.ru/?service=shop_search&amp;CCode=RU">Универсальный поиск товаров на Алиэкспресс, Амазон и Ибэй</a></li>
-<!--<li><a href="http://trackitonline.ru/?service=sms&amp;CCode=RU">СМС оповещение</a></li>-->
-<li><a href="http://trackitonline.ru/?service=postal&amp;CCode=RU">Почтовые службы мира</a></li>
-<li><a href="http://trackitonline.ru/?service=cn23&amp;CCode=RU">Таможенная декларация</a></li>
-<li><a href="http://trackitonline.ru/?service=stlist&amp;CCode=RU">Статусы почтовых отправлений</a></li>
-<li><a href="http://trackitonline.ru/?service=app&amp;CCode=RU">Приложения</a></li>
-<li><a href="http://trackitonline.ru/?service=feedback&amp;CCode=RU">Отзывы и предложения</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="text-center" style="margin-left:-10px;">
-						<br>
-						
-                    </div>
-                    	
-                </div>
-                <div class="col-md-8 col-lg-9">
-					<div class="rightside hidden-xs hidden-sm hidden-md">
-                        
-<div id="epn-mixer-d2a648953e07d3663aeae122288cda62"></div>
-                    </div>
-                    <div class="content">
-                        <div class="row-fluid hidden-sm hidden-xs" style="height: 36px;">
-                            <div class="col-xs-8">
-</div>
-                            <div class="col-xs-4"></div>
-                            <div class="col-xs-12"></div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="col-xs-12">
-                                <div class="clearfix"></div>
-                                <div class="btn-group">
-    <a class="btn btn-default" href="http://trackitonline.ru/?action=login">Вход</a> 
-    <a class="btn btn-default" href="http://trackitonline.ru/?action=reg">Регистрация</a>
-	   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-		<img class="flag" src="http://trackitonline.ru/pics/flag/ww.png"></a>
-        &nbsp;
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-		<li><a href="http://trackitonline.ru/?CCode=RU"><img class="flag" src="http://trackitonline.ru/pics/flag/ru.png" title="Русский" alt="Русский"> Русский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=US"><img class="flag" src="http://trackitonline.ru/pics/flag/gb.png" title="Английский" alt="Английский"> Английский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=DE"><img class="flag" src="http://trackitonline.ru/pics/flag/de.png" title="Немецкий" alt="Немецкий"> Немецкий</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=ES"><img class="flag" src="http://trackitonline.ru/pics/flag/es.png" title="Испанский" alt="Испанский"> Испанский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=FR"><img class="flag" src="http://trackitonline.ru/pics/flag/fr.png" title="Французский" alt="Французский"> Французский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=IT"><img class="flag" src="http://trackitonline.ru/pics/flag/it.png" title="Итальянский" alt="Итальянский"> Итальянский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=PL"><img class="flag" src="http://trackitonline.ru/pics/flag/pl.png" title="Польский" alt="Польский"> Польский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=PT"><img class="flag" src="http://trackitonline.ru/pics/flag/pt.png" title="Португальский" alt="Португальский"> Португальский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=UA"><img class="flag" src="http://trackitonline.ru/pics/flag/ua.png" title="Украинский" alt="Украинский"> Украинский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=CN"><img class="flag" src="http://trackitonline.ru/pics/flag/cn.png" title="Китайский" alt="Китайский"> Китайский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=HU"><img class="flag" src="http://trackitonline.ru/pics/flag/hu.png" title="Венгерский" alt="Венгерский"> Венгерский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=RO"><img class="flag" src="http://trackitonline.ru/pics/flag/ro.png" title="Румынский" alt="Румынский"> Румынский</a></li>
-		<li><a href="http://trackitonline.ru/?CCode=RO"><img class="flag" src="http://trackitonline.ru/pics/flag/tr.png" title="Турецкий" alt="Турецкий"> Турецкий</a></li>
-    </ul>
-</div>
-
-                                <div class="clearfix"></div>
-                                <div class="text-center">
-                                    
-									<br/>
-									
-                                </div>
-                                <div class="clearfix"></div>
-									<div class="col-sm-12"><div class="panel panel-default"><div class="panel-heading"></div></div>	</div>
-
-HEAD;
-
-require_once('shoplist.php');
-
-echo <<<FOOTER
-
-<div class="clearfix"></div>
-                            </div>
-                        </div>
-						<div class="clearfix"></div>
-                    </div>
-
-                    <div class="clearfix"></div>
-
-                </div>
-            </div>
-														
-            <div class="row footer gradient">
-                <div class="col-sm-10">
-                    <div class="links hidden-xs">
-                        <a href="http://trackitonline.ru/?service=about&amp;CCode=RU">О Сервисе</a>
-                        <a href="http://trackitonline.ru/?service=news&amp;CCode=RU">Новости</a>
-                        <a href="http://trackitonline.ru/?service=faq&amp;CCode=RU">Часто задаваемые вопросы</a>
-                        <a href="http://trackitonline.ru/?service=mail&amp;CCode=RU">Контакты</a>
-                        <a href="http://trackitonline.ru/?service=adv&amp;CCode=RU">Рекламодателю</a>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="btn-group dropup visible-xs-block">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <i class="glyphicon glyphicon-menu-hamburger"></i> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="http://trackitonline.ru/?service=about&amp;CCode=RU">О Сервисе</a></li>
-                            <li><a href="http://trackitonline.ru/?service=news&amp;CCode=RU">Новости</a></li>
-                            <li><a href="http://trackitonline.ru/?service=faq&amp;CCode=RU">Часто задаваемые вопросы</a></li>
-                            <li><a href="http://trackitonline.ru/?service=mail&amp;CCode=RU">Контакты</a></li>
-                            <li><a href="http://trackitonline.ru/?service=adv&amp;CCode=RU">Рекламодателю</a></li>
-                        </ul>
-                    </div>
-                    <div class="copyright">
-                        <img class="pic" src="http://trackitonline.ru/embed/img/sat_tl.png" width="15" border="0" title="Track It - Отслеживание почтовых отправлений" alt="Отслеживание почтовых отправлений">&copy; 2010-2015. Track It - Отслеживание почтовых отправлений
-                    </div>
-                </div>
-                <div class="col-sm-2 counter">
-                    
-                </div>
-            </div>
-        </div>
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="http://trackitonline.ru/embed/js/bootstrap.min.js"></script>
-
-        <script src="http://trackitonline.ru/fixs.js"></script>
-        <script src="http://trackitonline.ru/custom.js"></script> 
-        <script src="js/star-rating.min.js" type="text/javascript"></script>
-        <script src="js/market.js" type="text/javascript"></script>
-        <!--<script>
-            if (window!= top) 
-            top.location.href=location.href 
-        </script>-->
-
-        <script>
-            $(window).scroll(function () {
-                if ($(this).scrollTop() > 0)
-                    $('#scrollable').css({'position': 'fixed', 'top': '0px'});
-                else
-                    $('#scrollable').css({'top': '1568px', 'position': 'static'});
-                if ($(this).scrollTop() > 800)
-                    $('#scrollable2').css({'position': 'fixed', 'top': '0px'});
-                else
-                    $('#scrollable2').css({'top': '1568px', 'position': 'static'});
-            });
-        </script>
-    </body>
-</html>
-
-
-FOOTER;
+if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'ajax')
+{
+  $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
+  if ($type === 'post_review')
+  {
+    $review = filter_input_array(INPUT_POST, array(
+        'speed' => FILTER_VALIDATE_INT,
+        'responsibility' => FILTER_VALIDATE_INT,
+        'quality' => FILTER_VALIDATE_INT,
+        'summary' => FILTER_VALIDATE_INT,
+        'language' => array(
+                        'filter' => FILTER_VALIDATE_INT,
+                        'flags'  => FILTER_REQUIRE_ARRAY
+                       ),
+        'review' => array(
+                        'filter' => FILTER_SANITIZE_SPECIAL_CHARS,
+                        'flags'  => FILTER_REQUIRE_ARRAY
+                       )
+    ));
+    $errors = array();
+    if ($review['speed'] > 5 || $review['speed'] < 0)
+    {
+      $errors[] = 'Неверное значение оценки скорости';
+    }
+    if ($review['responsibility'] > 5 || $review['responsibility'] < 0)
+    {
+      $errors[] = 'Неверное значение оценки отзывчивости';
+    }
+    if ($review['quality'] > 5 || $review['quality'] < 0)
+    {
+      $errors[] = 'Неверное значение оценки качества';
+    }
+    if ($review['summary'] > 5 || $review['summary'] < 0)
+    {
+      $errors[] = 'Неверное значение итоговой оценки';
+    }
+    if (count($review['language']) < 1 || count($review['review']) < 1)
+    {
+      $errors[] = 'Ошибка числа отзывов';
+    }
+    
+  }
+  die();
+}
