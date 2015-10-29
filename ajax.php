@@ -31,6 +31,7 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
         'responsibility' => FILTER_VALIDATE_INT,
         'quality' => FILTER_VALIDATE_INT,
         'summary' => FILTER_VALIDATE_INT,
+        'parent' => FILTER_VALIDATE_INT,
         'language' => array(
                         'filter' => FILTER_VALIDATE_INT,
                         'flags'  => FILTER_REQUIRE_ARRAY
@@ -41,25 +42,72 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
                        )
     ));
     $errors = array();
-    if ($review['speed'] > 5 || $review['speed'] < 0)
+    if ($review['parent'] < 1)
+    {
+      $errors[] = 'Неверное значение магазина';
+    }
+    if ($review['speed'] > 5 || $review['speed'] < 1)
     {
       $errors[] = 'Неверное значение оценки скорости';
     }
-    if ($review['responsibility'] > 5 || $review['responsibility'] < 0)
+    if ($review['responsibility'] > 5 || $review['responsibility'] < 1)
     {
       $errors[] = 'Неверное значение оценки отзывчивости';
     }
-    if ($review['quality'] > 5 || $review['quality'] < 0)
+    if ($review['quality'] > 5 || $review['quality'] < 1)
     {
       $errors[] = 'Неверное значение оценки качества';
     }
-    if ($review['summary'] > 5 || $review['summary'] < 0)
+    if ($review['summary'] > 5 || $review['summary'] < 1)
     {
       $errors[] = 'Неверное значение итоговой оценки';
     }
     if (count($review['language']) < 1 || count($review['review']) < 1)
     {
       $errors[] = 'Ошибка числа отзывов';
+    }
+    foreach ($review['language'] as $lang)
+    {
+      if ($lang > 2 || $lang < 0)
+      {
+        $errors[] = 'Неверный индекс языка';
+      }
+    }
+    foreach ($review['review'] as $reviews)
+    {
+      if (strlen(trim($reviews)) < 1)
+      {
+        $errors[] = 'Пустое поле отзыва';
+      }
+    }
+    if (count($errors) === 0)
+    {
+      $DB->Query("INSERT INTO reviews (`is_comment`, `parent_id`, `user_id`, `rating_up`, `rating_down`, `rating_speed`,           `rating_responsibility`,         `rating_quality`,         `rating_summary`) 
+                         VALUES       (0,            '".$review['parent']."',           '$user_id', 0,          0,             '".$review['speed']."', '".$review['responsibility']."', '".$review['quality']."', '".$review['summary']."');")->Out();
+      $review_id = (int) $DB->Query("SELECT LAST_INSERT_ID() as last")->out()[0]['last'];
+      if ($review_id !== 0)
+      {
+        foreach ($review['language'] as $id => $lang)
+        {
+          if (isset($review['review'][$id]))
+          {
+            $DB->Query("INSERT INTO reviews_text (`review_id`, `text`, `language_id`)
+                        VALUES ('".$review_id."', '".$review['review'][$id]."', '".$lang."')");
+          }
+          else
+          {
+            $errors[] = 'Ошибка отзыва.';
+          }
+        }
+      }
+    }
+    if (count($errors) > 0)
+    {
+      return json_encode(array('success' => false, 'errors' => $errors));
+    }
+    else
+    {
+      return json_encode(array('success' => true));
     }
     
   }

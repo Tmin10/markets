@@ -115,27 +115,27 @@ else
     {
       $cont .= '<form class="form-horizontal" id="post-review">
                   <div class="form-group star">
-                    <label class="col-sm-4 control-label" for="rating1">Скорость обработки заказа</label>
+                    <label class="col-sm-4">Скорость обработки заказа</label>
                     <div class="col-sm-8">
-                      <input id="rating1" name="speed" value="0" class="rating-stars" data-step=1 data-size="xs">
+                      <input name="speed" value="3" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
                   <div class="form-group star">
-                    <label class="col-sm-4 control-label" for="rating2">Отзывчивость продавца</label>
+                    <label class="col-sm-4">Отзывчивость продавца</label>
                     <div class="col-sm-8">
-                      <input id="rating2" name="responsibility" value="0" class="rating-stars" data-step=1 data-size="xs">
+                      <input name="responsibility" value="3" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
                   <div class="form-group star">
-                    <label class="col-sm-4 control-label" for="rating3">Качество товара</label>
+                    <label class="col-sm-4">Качество товара</label>
                     <div class="col-sm-8">
-                      <input id="rating3" value="0" name="quality" class="rating-stars" data-step=1 data-size="xs" >
+                      <input value="3" name="quality" class="rating-stars" data-step=1 data-size="xs" >
                     </div>
                   </div>
                   <div class="form-group star">
-                    <label class="col-sm-4 control-label" for="rating4">Общая оценка</label>
+                    <label class="col-sm-4">Общая оценка</label>
                     <div class="col-sm-8">
-                      <input id="rating4" value="0" name="summary" class="rating-stars" data-step=1 data-size="xs">
+                      <input value="3" name="summary" class="rating-stars" data-step=1 data-size="xs">
                     </div>
                   </div>
                   <div class="form-group" class="language-select">
@@ -154,6 +154,7 @@ else
                     <button type="submit" id="add-language" class="btn btn-warning">Добавит отзыв на другом языке</button>
                   </div>
                   <input type="hidden" name="type" value="post_review"/>
+                  <input type="hidden" name="parent" value="'.$shop.'"/>
                 </form>
                 <div class="review-box">';
     }
