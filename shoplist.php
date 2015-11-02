@@ -111,7 +111,49 @@ else
     <div role="tabpanel" class="tab-pane" id="about">...1</div>
     <div role="tabpanel" class="tab-pane active" id="reviews">';
     
-    if (!($DB->Count('reviews', "parent_id = '$shop' AND is_comment = 0 AND user_id = '$user_id'")>0))
+    $cont .= '<div class="review-box">';
+    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
+                          . ' rating_responsibility, rating_quality, rating_summary, ('
+                                                                                    . 'SELECT COUNT(*) '
+                                                                                    . 'FROM reviews_text '
+                                                                                    . 'WHERE reviews_text.review_id = reviews.id'
+                                                                                    . ') as languages '
+                        . 'FROM reviews '
+                        . 'JOIN reviews_text ON reviews_text.review_id = reviews.id '
+                        . "WHERE parent_id = '$shop' AND reviews_text.language_id = 1")->Out();
+    if (count($reviews) === 0)
+    {
+      $cont .= "У данного магазина пока нет отзывов, оставьте первый.";
+    }
+    else
+    {
+      foreach ($reviews as $review) 
+      {
+        $cont .= 'Юзер: '.$review['user_id'].'<br />';
+        $cont .= '&#8679; '.$review['rating_up'].'&#8681; '.$review['rating_down'].'<br />';
+        $cont .= 'Скорость: '.$review['rating_speed'].', ';
+        $cont .= 'Отзывчивость: '.$review['rating_responsibility'].', ';
+        $cont .= 'Качество: '.$review['rating_quality'].', ';
+        $cont .= 'Суммарно: '.$review['rating_summary'].'<br />';
+        if ($review['languages'] > 1)
+        {
+             $cont .= 'Отзыв доступен на других языках.<br />';
+        }
+        $cont .= '-----------<br />';
+        $cont .= $review['text'].'<br /><a href="#" class="answer-link">Ответить</a>';
+        $cont .= "<form><textarea></textarea><br /><input type='submit' value='Отправить'></form>";
+        
+        
+      }
+    }
+    $cont .= '</div>';
+    
+    if (count($reviews) !== 0)
+    {
+      $user_reviw = ($DB->Query('SELECT COUNT(*) as count FROM reviews WHERE parent_id = \''.$shop.'\' AND user_id=\''.$user_id.'\'')->Out() > 0) ? true : false;
+    }
+    
+    if (count($reviews) === 0 || !$user_reviw)
     {
       $cont .= '<form class="form-horizontal" id="post-review">
                   <div class="form-group star">
@@ -155,43 +197,12 @@ else
                   </div>
                   <input type="hidden" name="type" value="post_review"/>
                   <input type="hidden" name="parent" value="'.$shop.'"/>
-                </form>
-                <div class="review-box">';
+                </form>';
     }
-    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
-                          . ' rating_responsibility, rating_quality, rating_summary, ('
-                                                                                    . 'SELECT COUNT(*) '
-                                                                                    . 'FROM reviews_text '
-                                                                                    . 'WHERE reviews_text.review_id = reviews.id'
-                                                                                    . ') as languages '
-                        . 'FROM reviews '
-                        . 'JOIN reviews_text ON reviews_text.review_id = reviews.id '
-                        . "WHERE parent_id = '$shop' AND is_comment = 0 AND reviews_text.language_id = 1")->Out();
-    if (count($reviews) === 0)
-    {
-      $cont .= "У данного магазина пока нет отзывов, оставьте первый.";
-    }
-    else
-    {
-      foreach ($reviews as $review) 
-      {
-        $cont .= 'Юзер: '.$review['user_id'].'<br />';
-        $cont .= '&#8679; '.$review['rating_up'].'&#8681; '.$review['rating_down'].'<br />';
-        $cont .= 'Скорость обработки заказа: '.$review['rating_speed'].'<br />';
-        $cont .= 'Отзывчивость продавца: '.$review['rating_responsibility'].'<br />';
-        $cont .= 'Качество товара: '.$review['rating_quality'].'<br />';
-        $cont .= 'Общая оценка: '.$review['rating_summary'].'<br />';
-        if ($review['languages'] > 1)
-        {
-             $cont .= 'Отзыв доступен на других языках.<br />';
-        }
-        $cont .= '-----------<br />';
-        $cont .= $review['text'].'<br />';
-        
-      }
-    }
+    
+    
+    
     $cont .= '</div>
-      </div>
     <div role="tabpanel" class="tab-pane" id="news">...3</div>
     <div role="tabpanel" class="tab-pane" id="coupons">...4</div>
   </div>
