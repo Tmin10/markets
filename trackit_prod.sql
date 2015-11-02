@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.5
+-- version 4.4.11
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Jul 23, 2015 at 07:46 AM
--- Server version: 5.1.71-community-log
--- PHP Version: 5.5.1
+-- Host: localhost
+-- Generation Time: Nov 02, 2015 at 01:43 PM
+-- Server version: 5.5.46-0ubuntu0.14.04.2
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `trackit_prod`
@@ -23,12 +23,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `review_id` int(11) NOT NULL,
+  `text` mediumtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reviews`
 --
 
 CREATE TABLE IF NOT EXISTS `reviews` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_comment` tinyint(1) NOT NULL COMMENT 'Признак того, что это комментарий к отзыву',
+  `id` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `rating_up` int(11) NOT NULL,
@@ -36,16 +48,22 @@ CREATE TABLE IF NOT EXISTS `reviews` (
   `rating_speed` int(1) NOT NULL,
   `rating_responsibility` int(1) NOT NULL,
   `rating_quality` int(1) NOT NULL,
-  `rating_summary` int(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+  `rating_summary` int(1) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `reviews`
 --
 
-INSERT INTO `reviews` (`id`, `is_comment`, `parent_id`, `user_id`, `rating_up`, `rating_down`, `rating_speed`, `rating_responsibility`, `rating_quality`, `rating_summary`) VALUES
-(1, 0, 1, 1, 22, 3, 5, 4, 3, 4);
+INSERT INTO `reviews` (`id`, `parent_id`, `user_id`, `rating_up`, `rating_down`, `rating_speed`, `rating_responsibility`, `rating_quality`, `rating_summary`) VALUES
+(1, 1, 2, 22, 3, 5, 4, 3, 4),
+(2, 0, 1, 0, 0, 0, 0, 0, 0),
+(3, 0, 1, 0, 0, 0, 0, 0, 0),
+(4, 0, 1, 0, 0, 5, 5, 5, 5),
+(5, 0, 1, 0, 0, 5, 5, 5, 5),
+(6, 0, 1, 0, 0, 0, 0, 0, 0),
+(7, 0, 1, 0, 0, 0, 0, 0, 0),
+(8, 69, 1, 0, 0, 3, 3, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -67,13 +85,11 @@ CREATE TABLE IF NOT EXISTS `reviews_rating` (
 --
 
 CREATE TABLE IF NOT EXISTS `reviews_text` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `review_id` int(11) NOT NULL,
   `text` longtext NOT NULL,
-  `language_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `review_id` (`review_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Тексты обзоров и комментариев' AUTO_INCREMENT=3 ;
+  `language_id` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='Тексты обзоров и комментариев';
 
 --
 -- Dumping data for table `reviews_text`
@@ -81,7 +97,11 @@ CREATE TABLE IF NOT EXISTS `reviews_text` (
 
 INSERT INTO `reviews_text` (`id`, `review_id`, `text`, `language_id`) VALUES
 (1, 1, 'Заказ был выполнени идеально, товар хороший, пригодный для эксплуатации по назначению.', 1),
-(2, 1, 'English review', 2);
+(2, 1, 'English review', 2),
+(3, 5, 'eryery', 1),
+(4, 6, 'eryery', 1),
+(5, 7, 'eryery', 1),
+(6, 8, 'ghk', 1);
 
 -- --------------------------------------------------------
 
@@ -90,13 +110,10 @@ INSERT INTO `reviews_text` (`id`, `review_id`, `text`, `language_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `shoplist_tag` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL,
   `shop_id` int(10) DEFAULT NULL,
-  `tag` int(10) DEFAULT NULL,
-  UNIQUE KEY `shop_id` (`shop_id`,`tag`),
-  KEY `id` (`id`),
-  KEY `tag` (`tag`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=203 ;
+  `tag` int(10) DEFAULT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=203 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `shoplist_tag`
@@ -311,13 +328,11 @@ INSERT INTO `shoplist_tag` (`id`, `shop_id`, `tag`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `shoplist_tag_list` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL,
   `category` int(10) DEFAULT NULL,
   `RU` text COLLATE utf8_unicode_ci NOT NULL,
-  `EN` text COLLATE utf8_unicode_ci NOT NULL,
-  KEY `id` (`id`),
-  KEY `category` (`category`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
+  `EN` text COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `shoplist_tag_list`
@@ -371,7 +386,7 @@ INSERT INTO `shoplist_tag_list` (`id`, `category`, `RU`, `EN`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `shop_names` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL,
   `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `link` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `country` varchar(2) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -385,13 +400,8 @@ CREATE TABLE IF NOT EXISTS `shop_names` (
   `EN` longtext COLLATE utf8_unicode_ci,
   `RU` longtext COLLATE utf8_unicode_ci,
   `shipping` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `payment_accepted` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `link` (`link`),
-  KEY `type` (`type`),
-  KEY `shipping` (`shipping`(255)),
-  FULLTEXT KEY `country` (`country`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=275 ;
+  `payment_accepted` varchar(300) COLLATE utf8_unicode_ci DEFAULT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=275 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `shop_names`
@@ -671,6 +681,88 @@ INSERT INTO `shop_names` (`id`, `title`, `link`, `country`, `type`, `affiliate`,
 (273, 'Jeans Machine', 'http://www.jeansmachine.cz/', 'CZ', 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (274, 'Podlaski Gabinet Numizmatyczny', 'http://www.pgnum.pl/', 'PL', 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reviews_text`
+--
+ALTER TABLE `reviews_text`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `review_id` (`review_id`);
+
+--
+-- Indexes for table `shoplist_tag`
+--
+ALTER TABLE `shoplist_tag`
+  ADD UNIQUE KEY `shop_id` (`shop_id`,`tag`),
+  ADD KEY `id` (`id`),
+  ADD KEY `tag` (`tag`);
+
+--
+-- Indexes for table `shoplist_tag_list`
+--
+ALTER TABLE `shoplist_tag_list`
+  ADD KEY `id` (`id`),
+  ADD KEY `category` (`category`);
+
+--
+-- Indexes for table `shop_names`
+--
+ALTER TABLE `shop_names`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `link` (`link`),
+  ADD KEY `type` (`type`),
+  ADD KEY `shipping` (`shipping`(255)),
+  ADD FULLTEXT KEY `country` (`country`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+--
+-- AUTO_INCREMENT for table `reviews_text`
+--
+ALTER TABLE `reviews_text`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `shoplist_tag`
+--
+ALTER TABLE `shoplist_tag`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=203;
+--
+-- AUTO_INCREMENT for table `shoplist_tag_list`
+--
+ALTER TABLE `shoplist_tag_list`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=39;
+--
+-- AUTO_INCREMENT for table `shop_names`
+--
+ALTER TABLE `shop_names`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=275;
 --
 -- Constraints for dumped tables
 --
