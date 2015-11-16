@@ -112,12 +112,17 @@ else
     <div role="tabpanel" class="tab-pane active" id="reviews">';
     
     $cont .= '<div class="review-box">';
-    $reviews = $DB->Query('SELECT reviews.id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
+    $reviews = $DB->Query('SELECT reviews.id as r_id, reviews_text.id, text, language_id, user_id, rating_up, rating_down, rating_speed,'
                           . ' rating_responsibility, rating_quality, rating_summary, ('
                                                                                     . 'SELECT COUNT(*) '
                                                                                     . 'FROM reviews_text '
                                                                                     . 'WHERE reviews_text.review_id = reviews.id'
-                                                                                    . ') as languages '
+                                                                                    . ') as languages, '
+                                                                                    .'('
+                                                                                    . 'SELECT COUNT(*) '
+                                                                                    . 'FROM comments '
+                                                                                    . 'WHERE comments.review_id = reviews.id'
+                                                                                    . ') as comments '
                         . 'FROM reviews '
                         . 'JOIN reviews_text ON reviews_text.review_id = reviews.id '
                         . "WHERE parent_id = '$shop' AND reviews_text.language_id = 1")->Out();
@@ -139,9 +144,14 @@ else
         {
              $cont .= 'Отзыв доступен на других языках.<br />';
         }
-        $cont .= '-----------<br />';
-        $cont .= $review['text'].'<br /><a href="#" class="answer-link">Ответить</a>';
-        $cont .= "<form><textarea></textarea><br /><input type='submit' value='Отправить'></form>";
+        if ($review['comments'] > 0)
+        {
+             $cont .= '<a href="#" class="review-comments" data-id="'.$review['r_id'].'">Комментарии ('.$review['comments'].')</a><div class="comments-box"></div><br />';
+        }
+        $cont .= '<br />';
+        $cont .= $review['text'].'<br /><div class="answer-box"><a href="#" class="answer-link">Ответить</a>';
+        $cont .= "<form class='answer-form'><textarea name='comment'></textarea><input type='hidden' name='type' value='post_comment'/>
+                  <input type='hidden' name='parent' value='".$review['r_id']."'/><br /><input type='submit' value='Отправить'></form></div>";
         
         
       }
@@ -150,7 +160,7 @@ else
     
     if (count($reviews) !== 0)
     {
-      $user_reviw = ($DB->Query('SELECT COUNT(*) as count FROM reviews WHERE parent_id = \''.$shop.'\' AND user_id=\''.$user_id.'\'')->Out() > 0) ? true : false;
+      $user_reviw = ($DB->Query('SELECT COUNT(*) as count FROM reviews WHERE parent_id = \''.$shop.'\' AND user_id=\''.$user_id.'\'')->Out()[0]['count'] > 0) ? true : false;
     }
     
     if (count($reviews) === 0 || !$user_reviw)

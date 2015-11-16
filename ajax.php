@@ -21,9 +21,11 @@ $POSTAL = json_decode('{"AC_PO":{"CODE":"AC_PO","SHORTNAME":"Post Office","ORGNA
 //ID текущего пользователя
 $user_id = 1;
 
-if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'ajax')
+//Отправка данных на сервер
+if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'post')
 {
   $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
+  
   if ($type === 'post_review')
   {
     $review = filter_input_array(INPUT_POST, array(
@@ -82,8 +84,8 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
     }
     if (count($errors) === 0)
     {
-      $DB->Query("INSERT INTO reviews (`is_comment`, `parent_id`, `user_id`, `rating_up`, `rating_down`, `rating_speed`,           `rating_responsibility`,         `rating_quality`,         `rating_summary`) 
-                         VALUES       (0,            '".$review['parent']."',           '$user_id', 0,          0,             '".$review['speed']."', '".$review['responsibility']."', '".$review['quality']."', '".$review['summary']."');")->Out();
+      $DB->Query("INSERT INTO reviews ( `parent_id`,          `user_id`, `rating_up`, `rating_down`, `rating_speed`,           `rating_responsibility`,         `rating_quality`,         `rating_summary`) 
+                         VALUES       ('".$review['parent']."','$user_id', 0,          0,             '".$review['speed']."', '".$review['responsibility']."', '".$review['quality']."', '".$review['summary']."');")->Out();
       $review_id = (int) $DB->Query("SELECT LAST_INSERT_ID() as last")->out()[0]['last'];
       if ($review_id !== 0)
       {
@@ -103,13 +105,49 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
     }
     if (count($errors) > 0)
     {
-      return json_encode(array('success' => false, 'errors' => $errors));
+      echo json_encode(array('success' => false, 'errors' => $errors));
     }
     else
     {
-      return json_encode(array('success' => true));
+      echo json_encode(array('success' => true));
+    }
+  }
+  if ($type === 'post_comment')
+  {
+    $comment = filter_input_array(INPUT_POST, array(
+      'parent' => FILTER_VALIDATE_INT,
+      'comment' => FILTER_SANITIZE_SPECIAL_CHARS
+    ));
+    $errors = array();
+    if ($comment['parent'] < 1)
+    {
+      $errors[] = 'Неверное значение отзыва';
+    }
+    if (strlen(trim($comment['comment'])) < 1)
+    {
+      $errors[] = 'Пустое поле комментария';
+    }
+    if (count($errors) === 0)
+    {
+      $DB->Query("INSERT INTO `comments`(`user_id`, `review_id`, `text`) VALUES ('$user_id', '".$comment['parent']."', '".$comment['comment']."')");
     }
     
+    if (count($errors) > 0)
+    {
+      echo json_encode(array('success' => false, 'errors' => $errors));
+    }
+    else
+    {
+      echo json_encode(array('success' => true));
+    }
   }
+  
   die();
+}
+
+//Получение данных с сервера
+if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'get')
+{
+  
+  
 }

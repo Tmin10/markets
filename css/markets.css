@@ -4,11 +4,15 @@
 #post-review div.star {
   margin: 0;
 }
-.answer-link {
+.answer-link, .review-comments {
   text-decoration: none;
   border-bottom: 1px dashed black;
 }
-.answer-link:hover, .answer-link:active, .answer-link:visited, .answer-link:focus {
+.answer-link:hover,     .answer-link:active,     .answer-link:visited,     .answer-link:focus,
+.review-comments:hover, .review-comments:active, .review-comments:visited, .review-comments:focus {
   text-decoration: none;
   border-bottom:1px dashed black; 
+}
+.answer-form, .comments-box {
+  display: none;
 }
