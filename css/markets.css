@@ -8,6 +8,9 @@
   text-decoration: none;
   border-bottom: 1px dashed black;
 }
+.comments-header {
+  text-align: center;
+}
 .answer-link:hover,     .answer-link:active,     .answer-link:visited,     .answer-link:focus,
 .review-comments:hover, .review-comments:active, .review-comments:visited, .review-comments:focus {
   text-decoration: none;

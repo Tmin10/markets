@@ -52,9 +52,15 @@ $(document).ready(function(){
       $('.comments-box').html('Loading...');
       $('.comments-box').show();
       var review_id = $(this).data('id');
-      $.post('ajax.php?act=get', {'id': review_id}, function (data) {
-        
-      });
+      $.post('ajax.php?act=get', {'type': 'get_comments', 'id': review_id}, function (data) {
+          if (data.success)
+          {
+            $('.comments-box').empty();
+            $.each(data.comments, function (index, value) {
+              $('.comments-box').append('Юзер '+value[0]+' '+value[1]+'<br />');
+            });
+          }
+      }, 'json');
     }
     return false;
   });

@@ -148,6 +148,18 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
 //Получение данных с сервера
 if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UNSAFE_RAW) === 'get')
 {
-  
+  $type = filter_input(INPUT_POST, 'type', FILTER_UNSAFE_RAW);
+  if ($type === 'get_comments')
+  {
+    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+    $reviews = $DB->Query("SELECT user_id, text FROM comments WHERE review_id = '$id'")->out();
+    $return = array ();
+    foreach ($reviews as $review)
+    {
+      $return[] = array($review['user_id'], $review['text']);
+    }
+    echo json_encode(array('success' => true, 'comments' => $return));
+    die();
+  }
   
 }

@@ -144,19 +144,20 @@ else
         {
              $cont .= 'Отзыв доступен на других языках.<br />';
         }
+        $cont .= '<br />'.$review['text'].'<br />';
+        
         if ($review['comments'] > 0)
         {
-             $cont .= '<a href="#" class="review-comments" data-id="'.$review['r_id'].'">Комментарии ('.$review['comments'].')</a><div class="comments-box"></div><br />';
+             $cont .= '<div class="comments-header"><a href="#" class="review-comments" data-id="'.$review['r_id'].'">Комментарии ('.$review['comments'].')</a></div><div class="comments-box"></div>';
         }
-        $cont .= '<br />';
-        $cont .= $review['text'].'<br /><div class="answer-box"><a href="#" class="answer-link">Ответить</a>';
+        $cont .= '<div class="answer-box"><a href="#" class="answer-link">Ответить</a>';
         $cont .= "<form class='answer-form'><textarea name='comment'></textarea><input type='hidden' name='type' value='post_comment'/>
                   <input type='hidden' name='parent' value='".$review['r_id']."'/><br /><input type='submit' value='Отправить'></form></div>";
         
         
       }
     }
-    $cont .= '</div>';
+    $cont .= '</div><br />';
     
     if (count($reviews) !== 0)
     {
@@ -165,7 +166,7 @@ else
     
     if (count($reviews) === 0 || !$user_reviw)
     {
-      $cont .= '<form class="form-horizontal" id="post-review">
+      $cont .= '<br /><form class="form-horizontal" id="post-review">
                   <div class="form-group star">
                     <label class="col-sm-4">Скорость обработки заказа</label>
                     <div class="col-sm-8">
