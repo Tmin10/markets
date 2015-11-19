@@ -154,7 +154,6 @@ else
         $cont .= "<form class='answer-form'><textarea name='comment'></textarea><input type='hidden' name='type' value='post_comment'/>
                   <input type='hidden' name='parent' value='".$review['r_id']."'/><br /><input type='submit' value='Отправить'></form></div>";
         
-        
       }
     }
     $cont .= '</div><br />';

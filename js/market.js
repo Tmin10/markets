@@ -18,7 +18,7 @@ $(document).ready(function(){
     var formdata = $('#post-review').serialize();
     $.post('ajax.php?act=post', formdata, function(data){
       
-    });
+    }, 'json');
     return false;
   });
   
@@ -36,8 +36,20 @@ $(document).ready(function(){
     console.log('sent comment');
     var formdata = $(this).serialize();
     $.post('ajax.php?act=post', formdata, function(data){
-      
-    });
+      if (data.success)
+      {
+        var date = new Date();
+        var dateText = ('0'+date.getDate()).slice(-2)+'-'+('0'+(date.getMonth()+1)).slice(-2)+'-'+date.getFullYear()+' '+('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2);
+        $('.comments-box').append('<div class="comment">Юзер '+' ('+dateText+'):<br />'+$('.answer-form textarea[name="comment"]').val()+'</div>');
+        $('.review-comments').html('Комментарии ('+data.comments_count+')');
+        $('.answer-form').hide();
+        $('.answer-form textarea[name="comment"]').val('');
+      }
+      else
+      {
+        alert(data.errors);
+      }
+    }, 'json');
     return false;
   });
   
@@ -57,7 +69,9 @@ $(document).ready(function(){
           {
             $('.comments-box').empty();
             $.each(data.comments, function (index, value) {
-              $('.comments-box').append('Юзер '+value[0]+' '+value[1]+'<br />');
+              var date = new Date(value[2]*1000);
+              var dateText = ('0'+date.getDate()).slice(-2)+'-'+('0'+(date.getMonth()+1)).slice(-2)+'-'+date.getFullYear()+' '+('0'+date.getHours()).slice(-2)+':'+('0'+date.getMinutes()).slice(-2);
+              $('.comments-box').append('<div class="comment">Юзер '+value[0]+' ('+dateText+'):<br />'+value[1]+'</div>');
             });
           }
       }, 'json');

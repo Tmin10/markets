@@ -19,3 +19,6 @@
 .answer-form, .comments-box {
   display: none;
 }
+.comment {
+  margin-bottom: 5px;
+}

@@ -84,8 +84,8 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
     }
     if (count($errors) === 0)
     {
-      $DB->Query("INSERT INTO reviews ( `parent_id`,          `user_id`, `rating_up`, `rating_down`, `rating_speed`,           `rating_responsibility`,         `rating_quality`,         `rating_summary`) 
-                         VALUES       ('".$review['parent']."','$user_id', 0,          0,             '".$review['speed']."', '".$review['responsibility']."', '".$review['quality']."', '".$review['summary']."');")->Out();
+      $DB->Query("INSERT INTO reviews ( `parent_id`,          `user_id`, `rating_up`, `rating_down`, `rating_speed`,           `rating_responsibility`,         `rating_quality`,         `rating_summary`, `post_time`) 
+                         VALUES       ('".$review['parent']."','$user_id', 0,          0,             '".$review['speed']."', '".$review['responsibility']."', '".$review['quality']."', '".$review['summary']."', UNIX_TIMESTAMP());")->Out();
       $review_id = (int) $DB->Query("SELECT LAST_INSERT_ID() as last")->out()[0]['last'];
       if ($review_id !== 0)
       {
@@ -129,7 +129,8 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
     }
     if (count($errors) === 0)
     {
-      $DB->Query("INSERT INTO `comments`(`user_id`, `review_id`, `text`) VALUES ('$user_id', '".$comment['parent']."', '".$comment['comment']."')");
+      $DB->Query("INSERT INTO `comments`(`user_id`, `review_id`, `text`, `post_time`) VALUES ('$user_id', '".$comment['parent']."', '".$comment['comment']."', UNIX_TIMESTAMP())");
+      $comments = $DB->Query("SELECT COUNT(*) as count FROM comments WHERE comments.review_id = '".$comment['parent']."'")->out();
     }
     
     if (count($errors) > 0)
@@ -138,7 +139,7 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
     }
     else
     {
-      echo json_encode(array('success' => true));
+      echo json_encode(array('success' => true, 'comments_count' => $comments[0]['count']));
     }
   }
   
@@ -152,11 +153,11 @@ if (filter_has_var(INPUT_GET, 'act') && filter_input(INPUT_GET, 'act', FILTER_UN
   if ($type === 'get_comments')
   {
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-    $reviews = $DB->Query("SELECT user_id, text FROM comments WHERE review_id = '$id'")->out();
+    $reviews = $DB->Query("SELECT user_id, text, post_time FROM comments WHERE review_id = '$id'")->out();
     $return = array ();
     foreach ($reviews as $review)
     {
-      $return[] = array($review['user_id'], $review['text']);
+      $return[] = array($review['user_id'], $review['text'], $review['post_time']);
     }
     echo json_encode(array('success' => true, 'comments' => $return));
     die();
